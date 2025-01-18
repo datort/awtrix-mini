@@ -1,7 +1,6 @@
 #include "Crawler.h"
 
-Crawler::Crawler() : wifiClient(), httpClient(new HTTPClient()) {
-    // Constructor
+Crawler::Crawler() : httpClient(new HTTPClient()), wifiClient() {
 }
 
 Crawler::~Crawler() {
@@ -9,7 +8,7 @@ Crawler::~Crawler() {
 }
 
 bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
-    if (!httpClient->begin(wifiClient, apiUrl)) { // Use member wifiClient
+    if (!httpClient->begin(wifiClient, apiUrl)) {
         Serial.println("Failed to connect to the server.");
         return false;
     }

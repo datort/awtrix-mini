@@ -15,6 +15,7 @@ Crawler crawler;
 Renderer& renderer = Renderer::getInstance();
 
 String awtrixApiUrl;
+uint8_t errorCount = 0;
 
 auto timer = timer_create_default();
 bool saveConfig = false;
@@ -32,13 +33,18 @@ bool updateScreen(void *) {
   JsonDocument json;
 
   if (crawler.crawl(awtrixApiUrl, json)) {
+    errorCount = 0;
+
     renderer.drawAwtrixScreen(json);
     timer.in(0, updateScreen);
-  } else {
+  } else if (errorCount >= 5) {
     Serial.println("Crawl failed.");
     renderer.alert("Awtrix: No HTTP response.\nRetrying in 5s", 0xf800);
     timer.in(4800, blankScreen);
     timer.in(5000, updateScreen);
+  } else {
+    errorCount += 1;
+    timer.in(0, updateScreen);
   }
 
   return true;

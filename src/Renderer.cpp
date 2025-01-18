@@ -11,6 +11,7 @@
 #define RECT_SIZE 8
 #define RECT_SPACING 1
 #define AWTRIX_WIDTH 32
+#define DATA_LENGTH 256
 #define HORIZONTAL_OFFSET 16
 #define VERTICAL_OFFSET 50
 
@@ -76,6 +77,7 @@ void Renderer::alert(String message, uint32_t color, uint8_t duration) {
 }
 
 void Renderer::drawAwtrixScreen(JsonDocument& json) {
+  unsigned long startTime = millis();
   if (!json.is<JsonArray>()) {
       Serial.println("Invalid color data: Expected a JSON array.");
       return;
@@ -83,30 +85,36 @@ void Renderer::drawAwtrixScreen(JsonDocument& json) {
 
   JsonArray colors = json.as<JsonArray>();
 
-  uint16 x = 0 + HORIZONTAL_OFFSET;
+  uint16 x = HORIZONTAL_OFFSET;
   uint8 y = VERTICAL_OFFSET;
 
-  for (size_t i = 0; i < colors.size(); ++i) {
-      uint32_t color = colors[i];
+  uint8_t red;
+  uint8_t green;
+  uint8_t blue;
+  uint16_t rgb565;
+  uint32_t color;
+  const uint8_t stepSize = RECT_SIZE + RECT_SPACING;
 
-      uint8_t red = (color >> 16) & 0xFF;
-      uint8_t green = (color >> 8) & 0xFF;
-      uint8_t blue = color & 0xFF;
-      uint16_t rgb565 = ((red & 0xF8) << 8) | ((green & 0xFC) << 3) | (blue >> 3);
+  for (size_t i = 0; i < DATA_LENGTH; ++i) {
+    color = colors[i];
 
-      tft.fillRect(x, y, RECT_SIZE, RECT_SIZE, rgb565);
+    red = (color >> 16) & 0xFF;
+    green = (color >> 8) & 0xFF;
+    blue = color & 0xFF;
+    rgb565 = (red & 0xF8) << 8 | (green & 0xFC) << 3 | blue >> 3;
 
-      x += RECT_SIZE + RECT_SPACING;
+    tft.fillRect(x, y, RECT_SIZE, RECT_SIZE, rgb565);
 
-      if ((i + 1) % AWTRIX_WIDTH == 0) {
-          x = 0 + HORIZONTAL_OFFSET;
-          y += RECT_SIZE + RECT_SPACING;
-      }
+    x += stepSize;
 
-      if (y >= tft.height()) {
-          break;
-      }
+    if (i % AWTRIX_WIDTH == 31) {
+      x = HORIZONTAL_OFFSET;
+      y += stepSize;
+    }
   }
+
+  Serial.print(millis() - startTime);
+  Serial.println(" ms");
 }
 
 void Renderer::alert(String message, uint32_t color) {

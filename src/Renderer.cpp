@@ -77,7 +77,6 @@ void Renderer::alert(String message, uint32_t color, uint8_t duration) {
 }
 
 void Renderer::drawAwtrixScreen(JsonDocument& json) {
-  unsigned long startTime = millis();
   if (!json.is<JsonArray>()) {
       Serial.println("Invalid color data: Expected a JSON array.");
       return;
@@ -112,9 +111,6 @@ void Renderer::drawAwtrixScreen(JsonDocument& json) {
       y += stepSize;
     }
   }
-
-  Serial.print(millis() - startTime);
-  Serial.println(" ms");
 }
 
 void Renderer::alert(String message, uint32_t color) {

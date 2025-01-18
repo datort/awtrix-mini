@@ -20,10 +20,9 @@ bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
         return false;
     }
 
-    String payload = httpClient->getString();
+    WiFiClient& stream = httpClient->getStream();
+    DeserializationError error = deserializeJson(response, stream);
     httpClient->end();
-
-    DeserializationError error = deserializeJson(response, payload);
 
     if (error) {
         Serial.printf("JSON deserialization failed: %s\n", error.c_str());

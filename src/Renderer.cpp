@@ -8,6 +8,12 @@
 #define RED 0xc800
 #define DARKGREY 0x39c7
 
+#define RECT_SIZE 8
+#define RECT_SPACING 1
+#define AWTRIX_WIDTH 32
+#define HORIZONTAL_OFFSET 16
+#define VERTICAL_OFFSET 50
+
 Renderer& Renderer::getInstance() {
   static Renderer instance;
   return instance;
@@ -70,10 +76,6 @@ void Renderer::alert(String message, uint32_t color, uint8_t duration) {
 }
 
 void Renderer::drawAwtrixScreen(JsonDocument& json) {
-  const int RECT_SIZE = 8;
-  const int RECT_SPACING = 1;
-  const int DISPLAY_WIDTH = 32;
-
   if (!json.is<JsonArray>()) {
       Serial.println("Invalid color data: Expected a JSON array.");
       return;
@@ -81,8 +83,8 @@ void Renderer::drawAwtrixScreen(JsonDocument& json) {
 
   JsonArray colors = json.as<JsonArray>();
 
-  int x = 0;
-  int y = 40;
+  uint16 x = 0 + HORIZONTAL_OFFSET;
+  uint8 y = VERTICAL_OFFSET;
 
   for (size_t i = 0; i < colors.size(); ++i) {
       uint32_t color = colors[i];
@@ -96,8 +98,8 @@ void Renderer::drawAwtrixScreen(JsonDocument& json) {
 
       x += RECT_SIZE + RECT_SPACING;
 
-      if ((i + 1) % DISPLAY_WIDTH == 0) {
-          x = 0;
+      if ((i + 1) % AWTRIX_WIDTH == 0) {
+          x = 0 + HORIZONTAL_OFFSET;
           y += RECT_SIZE + RECT_SPACING;
       }
 
@@ -105,4 +107,13 @@ void Renderer::drawAwtrixScreen(JsonDocument& json) {
           break;
       }
   }
+}
+
+void Renderer::alert(String message, uint32_t color) {
+  tft.fillScreen(TFT_BLACK);
+
+  tft.fillRect(0, 157, 320, 16, color);
+  tft.loadFont(FONT_DEFAULT);
+  tft.drawString(message, 0, 86, 1);
+  tft.unloadFont();
 }

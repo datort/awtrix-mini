@@ -16,6 +16,7 @@ public:
   void addConnectingInfo(String ssid);
   void alert(String message, uint32_t color, uint8_t duration);
   void drawAwtrixScreen(JsonDocument& json);
+  void alert(String message, uint32_t color);
 
 private:
   Renderer();

@@ -14,7 +14,7 @@ WiFiManagerWrapper wifiManagerWrapper;
 Crawler crawler;
 Renderer& renderer = Renderer::getInstance();
 
-String awtrixHost;
+String awtrixApiUrl;
 
 auto timer = timer_create_default();
 bool saveConfig = false;
@@ -31,11 +31,14 @@ bool blankScreen(void *) {
 bool updateScreen(void *) {
   JsonDocument json;
 
-  if (crawler.crawl(awtrixHost, json)) {
+  if (crawler.crawl(awtrixApiUrl, json)) {
     renderer.drawAwtrixScreen(json);
     timer.in(0, updateScreen);
   } else {
     Serial.println("Crawl failed.");
+    renderer.alert("Awtrix: No HTTP response.\nRetrying in 5s", 0xf800);
+    timer.in(4800, blankScreen);
+    timer.in(5000, updateScreen);
   }
 
   return true;
@@ -62,10 +65,10 @@ void setup() {
     );
   }
 
-  awtrixHost = configManager.getAwtrixHostname();
+  awtrixApiUrl = String("http://") + configManager.getAwtrixHostname() + "/api/screen";
 
-  timer.in(1800, blankScreen);
-  timer.in(2000, updateScreen);
+  timer.in(100, blankScreen);
+  timer.in(200, updateScreen);
 }
 
 void loop() {

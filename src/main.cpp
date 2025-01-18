@@ -23,26 +23,20 @@ void saveConfigCallback () {
   saveConfig = true;
 }
 
-bool startMirroring(void *) {
-  bool success = true;
-
+bool blankScreen(void *) {
   renderer.tft.fillScreen(TFT_BLACK);
+  return true;
+}
 
-  JsonDocument doc;
-  JsonArray array = doc.to<JsonArray>();
+bool updateScreen(void *) {
+  JsonDocument json;
 
-  if (crawler.crawl(awtrixHost, array)) {
-    Serial.println("Crawl successful! Retrieved data:");
-    /*for (JsonVariant v : array) {
-      Serial.println(v.as<int>());
-    }*/
+  if (crawler.crawl(awtrixHost, json)) {
+    renderer.drawAwtrixScreen(json);
+    timer.in(0, updateScreen);
   } else {
     Serial.println("Crawl failed.");
   }
-
-  /*while (success) {
-
-  }*/
 
   return true;
 }
@@ -68,9 +62,10 @@ void setup() {
     );
   }
 
-  awtrixHost = wifiManagerWrapper.getAwtrixHostname().getValue();
+  awtrixHost = configManager.getAwtrixHostname();
 
-  timer.in(2000, startMirroring);
+  timer.in(1800, blankScreen);
+  timer.in(2000, updateScreen);
 }
 
 void loop() {

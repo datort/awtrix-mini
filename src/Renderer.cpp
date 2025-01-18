@@ -68,3 +68,41 @@ void Renderer::alert(String message, uint32_t color, uint8_t duration) {
 
   delay(duration * 1000);
 }
+
+void Renderer::drawAwtrixScreen(JsonDocument& json) {
+  const int RECT_SIZE = 8;
+  const int RECT_SPACING = 1;
+  const int DISPLAY_WIDTH = 32;
+
+  if (!json.is<JsonArray>()) {
+      Serial.println("Invalid color data: Expected a JSON array.");
+      return;
+  }
+
+  JsonArray colors = json.as<JsonArray>();
+
+  int x = 0;
+  int y = 40;
+
+  for (size_t i = 0; i < colors.size(); ++i) {
+      uint32_t color = colors[i];
+
+      uint8_t red = (color >> 16) & 0xFF;
+      uint8_t green = (color >> 8) & 0xFF;
+      uint8_t blue = color & 0xFF;
+      uint16_t rgb565 = ((red & 0xF8) << 8) | ((green & 0xFC) << 3) | (blue >> 3);
+
+      tft.fillRect(x, y, RECT_SIZE, RECT_SIZE, rgb565);
+
+      x += RECT_SIZE + RECT_SPACING;
+
+      if ((i + 1) % DISPLAY_WIDTH == 0) {
+          x = 0;
+          y += RECT_SIZE + RECT_SPACING;
+      }
+
+      if (y >= tft.height()) {
+          break;
+      }
+  }
+}

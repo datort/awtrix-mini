@@ -1,44 +1,34 @@
 #include "Crawler.h"
 
-bool Crawler::crawl(const String& hostname, JsonArray& outputArray) {
-    String url = "http://" + hostname + "/api/screen";
-    Serial.println(url);
+bool Crawler::crawl(const String& hostname, JsonDocument& response) {
+  String url = "http://" + hostname + "/api/screen";
 
-    HTTPClient http;
+  HTTPClient http;
 
-    if (!http.begin(client, url)) {
-        Serial.println("Failed to connect to the server.");
-        return false;
-    }
+  if (!http.begin(client, url)) {
+    Serial.println("Failed to connect to the server.");
+    return false;
+  }
 
-    int httpCode = http.GET();
-
-    if (httpCode != HTTP_CODE_OK) {
-        Serial.printf("HTTP GET failed, error: %d\n", httpCode);
-        http.end();
-        return false;
-    }
-
-    String payload = http.getString();
+  int httpCode = http.GET();
+  if (httpCode != HTTP_CODE_OK) {
+    Serial.printf("HTTP GET failed, error: %d\n", httpCode);
     http.end();
+    return false;
+  }
 
-    JsonDocument jsonDoc;
-    DeserializationError error = deserializeJson(jsonDoc, payload);
+  String payload = http.getString();
+  http.end();
 
-    if (error) {
-        Serial.printf("JSON deserialization failed: %s\n", error.c_str());
-        return false;
-    }
+  JsonDocument json;
+  DeserializationError error = deserializeJson(json, payload);
 
-    if (!jsonDoc.is<JsonArray>()) {
-        Serial.println("Invalid JSON format: Expected an array.");
-        return false;
-    }
+  if (error) {
+    Serial.printf("JSON deserialization failed: %s\n", error.c_str());
+    return false;
+  }
 
-    JsonArray array = jsonDoc.as<JsonArray>();
-    for (JsonVariant v : array) {
-        outputArray.add(v);
-    }
-
-    return true;
+  response = json;
+  return true;
 }
+

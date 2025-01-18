@@ -19,7 +19,6 @@ void WiFiManagerWrapper::setupWiFi(const char* apName, const char* apPassword, s
 }
 
 bool WiFiManagerWrapper::isSetupComplete() {
-   
     return wm.getWiFiIsSaved();
 }
 

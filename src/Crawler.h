@@ -7,11 +7,10 @@
 
 class Crawler {
 public:
-    // Method to crawl and fetch color data from the given hostname
-    bool crawl(const String& hostname, JsonArray& outputArray);
+    bool crawl(const String& hostname, JsonDocument& response);
 
 private:
-    WiFiClient client; // WiFi client for HTTP requests
+    WiFiClient client;
 };
 
 #endif

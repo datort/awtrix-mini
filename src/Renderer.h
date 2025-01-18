@@ -3,6 +3,7 @@
 
 #include <TFT_eSPI.h>
 #include <SPI.h>
+#include <ArduinoJson.h>
 
 class Renderer {
 public:
@@ -14,6 +15,7 @@ public:
   void addSetupNote();
   void addConnectingInfo(String ssid);
   void alert(String message, uint32_t color, uint8_t duration);
+  void drawAwtrixScreen(JsonDocument& json);
 
 private:
   Renderer();

@@ -33,7 +33,7 @@ void Renderer::drawBootScreen() {
   tft.setTextColor(WHITE);
   tft.drawString("Awtrix", 5, 20);
   tft.setTextColor(RED);
-  tft.drawString("MINI", 86, 20);
+  tft.drawString("Mini", 89, 20);
   tft.unloadFont();
   tft.loadFont(FONT_DEFAULT);
   tft.setTextColor(WHITE);
@@ -44,7 +44,7 @@ void Renderer::drawBootScreen() {
 void Renderer::addSetupNote() {
   tft.loadFont(FONT_DEFAULT);
   tft.setTextColor(WHITE);
-  tft.drawString("Wifi connect to:", 5, 90);
+  tft.drawString("Ready, connect to Wifi:", 5, 90);
   tft.drawString(AP_NAME, 5, 120);
   tft.drawString(AP_PASSWORD, 5, 145);
 }

@@ -17,6 +17,7 @@ public:
   void alert(String message, uint32_t color, uint8_t duration);
   void drawAwtrixScreen(JsonDocument& json);
   void alert(String message, uint32_t color);
+  void hint(String message, uint32_t color);
 
 private:
   Renderer();

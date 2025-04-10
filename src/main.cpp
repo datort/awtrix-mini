@@ -35,16 +35,22 @@ bool updateScreen(void *) {
   JsonDocument json;
 
   if (crawler.crawl(awtrixApiUrl, json)) {
-    errorCount = 0;
+    if (errorCount > 0) {
+      renderer.tft.fillScreen(TFT_BLACK);
+      errorCount = 0;
+    }
 
     renderer.drawAwtrixScreen(json);
-    timer.in(0, updateScreen);
+    timer.in(10, updateScreen);
   } else if (errorCount >= 5) {
+    errorCount = 0;
     Serial.println("Crawl failed.");
-    renderer.alert("Awtrix: No HTTP response.\nRetrying in 5s", 0xf800);
+    renderer.alert("Awtrix: No HTTP response.\nRetrying in 5s", RED);
     timer.in(4800, blankScreen);
     timer.in(5000, updateScreen);
   } else {
+    if (errorCount == 0) renderer.hint("Trying " + String(configManager.getAwtrixHostname()), ORANGE);
+
     errorCount += 1;
     timer.in(0, updateScreen);
   }

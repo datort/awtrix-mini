@@ -1,20 +1,6 @@
 #include "Renderer.h"
 #include "Constants.h"
 
-#define ORANGE 0xfc00
-#define BLUE 0x05b9
-#define WHITE 0xffff
-#define BLACK 0x0000
-#define RED 0xc800
-#define DARKGREY 0x39c7
-
-#define RECT_SIZE 8
-#define RECT_SPACING 1
-#define AWTRIX_WIDTH 32
-#define DATA_LENGTH 256
-#define HORIZONTAL_OFFSET 16
-#define VERTICAL_OFFSET 50
-
 Renderer& Renderer::getInstance() {
   static Renderer instance;
   return instance;
@@ -53,27 +39,17 @@ void Renderer::addConnectingInfo(String ssid) {
   tft.loadFont(FONT_DEFAULT);
   tft.setTextColor(WHITE);
   tft.drawString("Connecting to Wifi", 5, 90);
+  tft.setTextColor(LIGHTBLUE);
   tft.drawString(ssid, 5, 120);
 }
 
-void Renderer::drawLayout() {  
-  tft.fillScreen(TFT_BLACK);
-
-  // Clock & Date Background
-  tft.fillRect(0, 0, 240, 54, DARKGREY);
-  tft.fillRect(0, 54, 240, 26, ORANGE);
-}
-
-void Renderer::alert(String message, uint32_t color, uint8_t duration) {
-  tft.fillScreen(TFT_BLACK);
-
-  tft.fillRect(0, 0, 240, 40, color);
-  tft.setTextDatum(MC_DATUM);
+void Renderer::hint(String message, uint32_t color) {
+  tft.fillRect(0, 0, DISPLAY_WIDTH, 50, BLACK);
+  tft.fillRect(0, 0, DISPLAY_WIDTH, 14, color);
   tft.loadFont(FONT_DEFAULT);
-  tft.drawString(message, 120, 120, 1);
+  tft.setTextColor(WHITE);
+  tft.drawString(message, 0, 20, 1);
   tft.unloadFont();
-
-  delay(duration * 1000);
 }
 
 void Renderer::drawAwtrixScreen(JsonDocument& json) {
@@ -116,8 +92,8 @@ void Renderer::drawAwtrixScreen(JsonDocument& json) {
 void Renderer::alert(String message, uint32_t color) {
   tft.fillScreen(TFT_BLACK);
 
-  tft.fillRect(0, 157, 320, 16, color);
+  tft.fillRect(0, 158, DISPLAY_WIDTH, 16, color);
   tft.loadFont(FONT_DEFAULT);
-  tft.drawString(message, 0, 86, 1);
+  tft.drawString(message, 0, 96, 1);
   tft.unloadFont();
 }

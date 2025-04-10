@@ -13,6 +13,8 @@ bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
         return false;
     }
 
+    httpClient->setTimeout(1500);
+
     int httpCode = httpClient->GET();
     if (httpCode != HTTP_CODE_OK) {
         Serial.printf("HTTP GET failed, error: %d\n", httpCode);

@@ -20,8 +20,6 @@ uint8_t errorCount = 0;
 auto timer = timer_create_default();
 bool saveConfig = false;
 
-int debugTimer = millis();
-
 void saveConfigCallback () {
   saveConfig = true;
 }
@@ -54,12 +52,6 @@ bool updateScreen(void *) {
     errorCount += 1;
     timer.in(0, updateScreen);
   }
-
-  Serial.print(millis() - debugTimer);
-  Serial.print(" ms (");
-  Serial.print(1000 / (millis() - debugTimer));
-  Serial.println(" fps)");
-  debugTimer = millis();
 
   return true;
 }

@@ -1,30 +1,49 @@
 #include "Crawler.h"
 
-Crawler::Crawler() : httpClient(new HTTPClient()), wifiClient() {
+Crawler::Crawler() : httpClient(new HTTPClient()), wifiClient(), isConnected(false) {
 }
 
 Crawler::~Crawler() {
+    if (isConnected) {
+        httpClient->end();
+    }
     delete httpClient;
 }
 
-bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
+bool Crawler::ensureConnection(const String& apiUrl) {
+    if (isConnected && currentUrl == apiUrl) {
+        return true;
+    }
+    
+    if (isConnected) {
+        httpClient->end();
+        isConnected = false;
+    }
+    
     if (!httpClient->begin(wifiClient, apiUrl)) {
         Serial.println("Failed to connect to the server.");
         return false;
     }
+    
+    httpClient->setTimeout(2000);
+    currentUrl = apiUrl;
+    isConnected = true;
+    return true;
+}
 
-    httpClient->setTimeout(1500);
+bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
+    if (!ensureConnection(apiUrl)) {
+        return false;
+    }
 
     int httpCode = httpClient->GET();
     if (httpCode != HTTP_CODE_OK) {
         Serial.printf("HTTP GET failed, error: %d\n", httpCode);
-        httpClient->end();
         return false;
     }
 
     WiFiClient& stream = httpClient->getStream();
     DeserializationError error = deserializeJson(response, stream);
-    httpClient->end();
 
     if (error) {
         Serial.printf("JSON deserialization failed: %s\n", error.c_str());

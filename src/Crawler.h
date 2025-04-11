@@ -15,6 +15,10 @@ public:
 private:
     HTTPClient* httpClient;
     WiFiClient wifiClient;
+    String currentUrl;
+    bool isConnected;
+    
+    bool ensureConnection(const String& apiUrl);
 };
 
 #endif

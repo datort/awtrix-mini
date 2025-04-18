@@ -35,7 +35,7 @@ bool blankScreen(void *) {
 bool updateScreen(void *) {
   JsonDocument json;
 
-  if (crawler.crawl(awtrixApiUrl, json)) {
+  if (crawler.crawl(awtrixApiUrl, json, configManager.getAwtrixAuthUser(), configManager.getAwtrixAuthPass())) {
     if (errorCount > 0) {
       renderer.tft.fillScreen(TFT_BLACK);
       errorCount = 0;
@@ -77,6 +77,8 @@ void setup() {
     configManager.saveConfig(
       wifiManagerWrapper.getCustomHostname().getValue(),
       wifiManagerWrapper.getAwtrixHostname().getValue(),
+      wifiManagerWrapper.getAwtrixAuthUser().getValue(),
+      wifiManagerWrapper.getAwtrixAuthPass().getValue(),
       wifiManagerWrapper.getMqttBroker().getValue(),
       wifiManagerWrapper.getMqttPort().getValue(),
       wifiManagerWrapper.getMqttUsername().getValue(),

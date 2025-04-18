@@ -15,6 +15,7 @@
 #define BLACK 0x0000
 #define RED 0xc800
 #define DARKGREY 0x39c7
+#define LIGHTGREY 0xbdf7
 #define GREEN 0x07e0
 #define LIGHTBLUE 0x6f7f
 

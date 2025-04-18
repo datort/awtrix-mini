@@ -39,6 +39,9 @@ bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
     int httpCode = httpClient->GET();
     if (httpCode != HTTP_CODE_OK) {
         Serial.printf("HTTP GET failed, error: %d\n", httpCode);
+        isConnected = false;
+        currentUrl = "";
+        httpClient->end();
         return false;
     }
 

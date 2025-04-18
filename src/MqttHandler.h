@@ -27,6 +27,7 @@ private:
     
     void onMessage(String &topic, String &payload);
     void handleEraseConfig();
+    void handleSettingUpdate(String &payload);
 };
 
 #endif 

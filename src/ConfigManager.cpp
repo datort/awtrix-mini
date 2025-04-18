@@ -121,3 +121,28 @@ const char* ConfigManager::getMqttPassword() {
 const char* ConfigManager::getMqttTopic() {
   return mqttTopic;
 }
+
+void ConfigManager::updateSetting(const char* key, const char* value) {
+  JsonDocument json;
+  
+  if (LittleFS.exists("/config.json")) {
+    File configFile = LittleFS.open("/config.json", "r");
+    if (configFile) {
+      DeserializationError error = deserializeJson(json, configFile);
+      configFile.close();
+      if (error) {
+        Serial.println("Failed to read config file, using empty config");
+      }
+    }
+  }
+
+  json[key] = value;
+
+  File configFile = LittleFS.open("/config.json", "w");
+  if (configFile) {
+    serializeJson(json, configFile);
+    configFile.close();
+  } else {
+    Serial.println("Failed to open config file for writing");
+  }
+}

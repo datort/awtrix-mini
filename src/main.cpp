@@ -61,7 +61,7 @@ bool updateScreen(void *) {
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Awtrix Mini starting");
+  Serial.println("AWTRIX STREAM starting");
 
   renderer.drawBootScreen();
   delay(1000);

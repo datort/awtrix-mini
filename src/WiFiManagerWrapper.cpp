@@ -1,7 +1,7 @@
 #include "WiFiManagerWrapper.h"
 
 WiFiManagerWrapper::WiFiManagerWrapper() 
-    : customHostname("hostname", "This device's hostname", "awtrixmini", 50),
+    : customHostname("hostname", "This device's hostname", "awtrixstream", 50),
       awtrixHostname("awtrixHostname", "Host AWTRIX hostname or IP", "192.168.178.123", 50),
       awtrixAuthUser("awtrixAuthUser", "", "", 50, " placeholder=\"AWTRIX Auth User (optional)\""),
       awtrixAuthPass("awtrixAuthPass", "", "", 50, " placeholder=\"AWTRIX Auth Password (optional)\""),
@@ -9,7 +9,7 @@ WiFiManagerWrapper::WiFiManagerWrapper()
       mqttPort("mqttPort", "MQTT Port", "1883", 5, " placeholder=\"1883\""),
       mqttUsername("mqttUsername", "MQTT Username", "", 50),
       mqttPassword("mqttPassword", "MQTT Password", "", 50),
-      mqttTopic("mqttTopic", "MQTT Topic", "awtrixmini", 50) {
+      mqttTopic("mqttTopic", "MQTT Topic", "awtrixstream", 50) {
 }
 
 void WiFiManagerWrapper::setupWiFi(const char* apName, const char* apPassword, std::function<void()> onSaveConfig) {

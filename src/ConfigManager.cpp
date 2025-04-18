@@ -1,7 +1,7 @@
 #include "ConfigManager.h"
 
 ConfigManager::ConfigManager() {
-  strcpy(hostname, "awtrixmini");
+  strcpy(hostname, "awtrixstream");
   strcpy(awtrixHostname, "192.168.178.123");
   strcpy(awtrixAuthUser, "");
   strcpy(awtrixAuthPass, "");
@@ -9,7 +9,7 @@ ConfigManager::ConfigManager() {
   strcpy(mqttPort, "1883");
   strcpy(mqttUsername, "");
   strcpy(mqttPassword, "");
-  strcpy(mqttTopic, "awtrixmini");
+  strcpy(mqttTopic, "awtrixstream");
 }
 
 bool ConfigManager::loadConfig() {

@@ -1,21 +1,22 @@
-# Awtrix Mini
+# AWTRIX STREAM
 
-A project that displays information from an Awtrix matrix on an LC display via HTTP communication.
+A project that displays information from an AWTRIX matrix on an LC display via HTTP communication.
 
 ## Description
 
-This project interfaces with an Awtrix matrix display through HTTP requests and presents the information on an LC display.
+This project interfaces with an AWTRIX matrix display through HTTP requests and presents the information on an LC display.
 
 For more detailed information about this project, please visit:
 - Project blog: [datort.de](https://datort.de)
 - Video tutorial: [YouTube Tutorial](https://youtu.be/LMmw3sYUiGc) - A detailed walkthrough of the project and build instructions in german language
+- The AWTRIX main project: [blueforcer.github.io](https://blueforcer.github.io/awtrix3/#/)
 
 
 ## Requirements
 
-- ESP8266 D1 Mini board (others may work)
+- ESP8266 D1 Mini board (others may work, not tested yet)
 - LC display with ST7789 driver support
-- A host awtrix matrix
+- A host AWTRIX matrix to grab the display from
 
 ## Building and Setup
 
@@ -23,6 +24,35 @@ For more detailed information about this project, please visit:
 2. Open the project in PlatformIO
 3. Configure your settings in `platformio.ini`
 4. Build and upload to your device
+
+## MQTT Support
+
+When MQTT is configured in the initial setup, you can control your AWTRIX STREAM device through MQTT messages. 
+
+You can configure the topic AWTRIX STREAM listens on during your initial configuration. For the following examples we will use the default of "awtrixstream".
+
+- `awtrixstream/erase` - Caution: Will immediately erase all settings to start over
+  - Payload: none
+
+- `awtrixstream/reboot` - Restart your AWTRIX STREAM
+  - Payload: none
+
+- `awtrixstream/setting` - Modify device settings
+  - Payload examples:
+    ```json
+    {"awtrixHostname": "192.168.2.3"}  // Changes the ip/host of the host AWTRIX to grab data from
+    {"awtrixAuthUser": "myuser"}  // Changes username for HTTP authentication to the host AWTRIX
+    {"awtrixAuthPass": "mypass"}  // Changes password for HTTP authentication to the host AWTRIX
+    {"mqttBroker": "my.broker.local"}  // Changes the broker url
+    {"mqttTopic": "awtrixstream123"}  // Changes the topic the AWTRIX STREAMS listens on for these type of commands
+    ```
+
+- `awtrixstream/display` - Toggle the display on/off
+  - Payload examples:
+    ```json
+    {"on": true}  // Activate the display
+    {"on": false}  // Deactivate the display
+    ```
 
 
 ## License

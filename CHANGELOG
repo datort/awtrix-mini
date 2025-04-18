@@ -1,0 +1,18 @@
+# Changelog
+
+## v1.1.0 - xx.xx.xxxx
+
+[FEATURE] MQTT broker support
+[FEATURE] Change settings via MQTT
+[FEATURE] HTTP Basic Auth configuration to access secured AWTRIX hosts
+[FEATURE] Toggle display via MQTT
+[FEATURE] Reboot AWTRIX STREAM via MQTT
+[FEATURE] Erase all settings via MQTT to start over
+[FIX] Several layout/screen optimisations and new dialogs
+[FIX] Reduce Overhead on HTTP calls for better performance
+[FIX] Removed FPS counter on Serial connection for better performance
+[CHORE] Name change to a more fancy "AWTRIX STREAM". Yeah!
+
+## v1.0.0 - 06.04.2025
+
+Initial release 

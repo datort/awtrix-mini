@@ -4,9 +4,9 @@
 #define FONT_DEFAULT ChakraPetchRegular22
 #define FONT_LARGE ChakraPetchRegular28
 
-#define APP_VERSION "v1.0.0"
+#define APP_VERSION "v1.1.0"
 
-#define AP_NAME "Awtrix Mini - Setup"
+#define AP_NAME "AWTRIX STREAM-Setup"
 #define AP_PASSWORD "12345678"
 
 #define ORANGE 0xfc00

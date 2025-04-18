@@ -17,12 +17,12 @@ void Renderer::drawBootScreen() {
 
   tft.loadFont(FONT_LARGE);
   tft.setTextColor(WHITE);
-  tft.drawString("Awtrix", 5, 20);
-  tft.setTextColor(RED);
-  tft.drawString("Mini", 89, 20);
+  tft.drawString("AWTRIX", 5, 20);
+  tft.setTextColor(GREEN);
+  tft.drawString("STREAM", 106, 20);
   tft.unloadFont();
   tft.loadFont(FONT_DEFAULT);
-  tft.setTextColor(WHITE);
+  tft.setTextColor(LIGHTGREY);
   tft.drawString(APP_VERSION, 5, 48);
   tft.unloadFont();
 }
@@ -30,9 +30,12 @@ void Renderer::drawBootScreen() {
 void Renderer::addSetupNote() {
   tft.loadFont(FONT_DEFAULT);
   tft.setTextColor(WHITE);
-  tft.drawString("Ready, connect to Wifi:", 5, 90);
-  tft.drawString(AP_NAME, 5, 120);
-  tft.drawString(AP_PASSWORD, 5, 145);
+  tft.drawString("To set up, connect to:", 5, 88);
+  tft.drawString(AP_NAME, 5, 117);
+  tft.setTextColor(LIGHTGREY);
+  tft.drawString("Password:", 5, 142);
+  tft.setTextColor(WHITE);
+  tft.drawString(AP_PASSWORD, 114, 142);
 }
 
 void Renderer::addConnectingInfo(String ssid) {

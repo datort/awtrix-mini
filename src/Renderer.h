@@ -10,11 +10,9 @@ public:
   static Renderer& getInstance();
   TFT_eSPI tft;
 
-  void drawLayout();
   void drawBootScreen();
   void addSetupNote();
   void addConnectingInfo(String ssid);
-  void alert(String message, uint32_t color, uint8_t duration);
   void drawAwtrixScreen(JsonDocument& json);
   void alert(String message, uint32_t color);
   void hint(String message, uint32_t color);

@@ -2,7 +2,12 @@
 
 ConfigManager::ConfigManager() {
   strcpy(hostname, "awtrixmini");
-  strcpy(awtrixHostname, "192.168.1.100");
+  strcpy(awtrixHostname, "192.168.178.123");
+  strcpy(mqttBroker, "");
+  strcpy(mqttPort, "1883");
+  strcpy(mqttUsername, "");
+  strcpy(mqttPassword, "");
+  strcpy(mqttTopic, "awtrixmini");
 }
 
 bool ConfigManager::loadConfig() {
@@ -24,6 +29,23 @@ bool ConfigManager::loadConfig() {
 
           strcpy(hostname, json["hostname"]);
           strcpy(awtrixHostname, json["awtrixHostname"]);
+          
+          if (json.containsKey("mqttBroker")) {
+            strcpy(mqttBroker, json["mqttBroker"]);
+          }
+          if (json.containsKey("mqttPort")) {
+            strcpy(mqttPort, json["mqttPort"]);
+          }
+          if (json.containsKey("mqttUsername")) {
+            strcpy(mqttUsername, json["mqttUsername"]);
+          }
+          if (json.containsKey("mqttPassword")) {
+            strcpy(mqttPassword, json["mqttPassword"]);
+          }
+          if (json.containsKey("mqttTopic")) {
+            strcpy(mqttTopic, json["mqttTopic"]);
+          }
+          
           configFile.close();
           return true;
         }
@@ -37,10 +59,18 @@ bool ConfigManager::loadConfig() {
   return false;
 }
 
-void ConfigManager::saveConfig(const char* updatedHostname, const char* updatedAwtrixHostname) {
+void ConfigManager::saveConfig(const char* updatedHostname, const char* updatedAwtrixHostname, 
+                             const char* updatedMqttBroker, const char* updatedMqttPort,
+                             const char* updatedMqttUsername, const char* updatedMqttPassword,
+                             const char* updatedMqttTopic) {
   JsonDocument json;
   json["hostname"] = updatedHostname;
   json["awtrixHostname"] = updatedAwtrixHostname;
+  json["mqttBroker"] = updatedMqttBroker;
+  json["mqttPort"] = updatedMqttPort;
+  json["mqttUsername"] = updatedMqttUsername;
+  json["mqttPassword"] = updatedMqttPassword;
+  json["mqttTopic"] = updatedMqttTopic;
 
   File configFile = LittleFS.open("/config.json", "w");
   serializeJson(json, configFile);
@@ -48,6 +78,20 @@ void ConfigManager::saveConfig(const char* updatedHostname, const char* updatedA
 
   strcpy(hostname, updatedHostname);
   strcpy(awtrixHostname, updatedAwtrixHostname);
+  strcpy(mqttBroker, updatedMqttBroker);
+  strcpy(mqttPort, updatedMqttPort);
+  strcpy(mqttUsername, updatedMqttUsername);
+  strcpy(mqttPassword, updatedMqttPassword);
+  strcpy(mqttTopic, updatedMqttTopic);
+}
+
+void ConfigManager::resetConfig() {
+  if (LittleFS.begin()) {
+    if (LittleFS.exists("/config.json")) {
+      LittleFS.remove("/config.json");
+      Serial.println("Config file deleted");
+    }
+  }
 }
 
 const char* ConfigManager::getHostname() {
@@ -56,4 +100,24 @@ const char* ConfigManager::getHostname() {
 
 const char* ConfigManager::getAwtrixHostname() {
   return awtrixHostname;
+}
+
+const char* ConfigManager::getMqttBroker() {
+  return mqttBroker;
+}
+
+const char* ConfigManager::getMqttPort() {
+  return mqttPort;
+}
+
+const char* ConfigManager::getMqttUsername() {
+  return mqttUsername;
+}
+
+const char* ConfigManager::getMqttPassword() {
+  return mqttPassword;
+}
+
+const char* ConfigManager::getMqttTopic() {
+  return mqttTopic;
 }

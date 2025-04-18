@@ -4,6 +4,7 @@
 #include "WiFiManagerWrapper.h"
 #include "Renderer.h"
 #include "Crawler.h"
+#include "MqttHandler.h"
 #include <arduino-timer.h>
 #include <ArduinoJson.h>
 #include "Constants.h"
@@ -13,6 +14,8 @@ ConfigManager configManager;
 WiFiManagerWrapper wifiManagerWrapper;
 Crawler crawler;
 Renderer& renderer = Renderer::getInstance();
+WiFiClient wifiClient;
+MqttHandler mqttHandler(wifiClient, renderer, configManager, wifiManagerWrapper);
 
 String awtrixApiUrl;
 uint8_t errorCount = 0;
@@ -39,7 +42,7 @@ bool updateScreen(void *) {
     }
 
     renderer.drawAwtrixScreen(json);
-    timer.in(10, updateScreen);
+    timer.in(20, updateScreen);
   } else if (errorCount >= 5) {
     errorCount = 0;
     Serial.println("Crawl failed.");
@@ -73,8 +76,29 @@ void setup() {
   if (saveConfig) {
     configManager.saveConfig(
       wifiManagerWrapper.getCustomHostname().getValue(),
-      wifiManagerWrapper.getAwtrixHostname().getValue()
+      wifiManagerWrapper.getAwtrixHostname().getValue(),
+      wifiManagerWrapper.getMqttBroker().getValue(),
+      wifiManagerWrapper.getMqttPort().getValue(),
+      wifiManagerWrapper.getMqttUsername().getValue(),
+      wifiManagerWrapper.getMqttPassword().getValue(),
+      wifiManagerWrapper.getMqttTopic().getValue()
     );
+  }
+
+  if (strlen(configManager.getMqttBroker()) > 0) {
+    mqttHandler.begin(configManager.getMqttBroker(), atoi(configManager.getMqttPort()));
+    while (!mqttHandler.connect(configManager.getAwtrixHostname())) {
+      Serial.print(".");
+      delay(500);
+    }
+    Serial.println("Connected to MQTT");
+    renderer.alert("MQTT connected.\nTopic: " + String(configManager.getMqttTopic()), GREEN);
+    delay(2500);
+
+    String topic = String(configManager.getMqttTopic());
+    mqttHandler.subscribe(topic.c_str());
+  } else {
+    Serial.println("No MQTT broker configured, skipping MQTT setup");
   }
 
   awtrixApiUrl = String("http://") + configManager.getAwtrixHostname() + "/api/screen";
@@ -85,4 +109,5 @@ void setup() {
 
 void loop() {
   timer.tick();
+  mqttHandler.loop();
 }

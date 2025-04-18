@@ -39,7 +39,7 @@ void Renderer::addConnectingInfo(String ssid) {
   tft.loadFont(FONT_DEFAULT);
   tft.setTextColor(WHITE);
   tft.drawString("Connecting to Wifi", 5, 90);
-  tft.setTextColor(LIGHTBLUE);
+  tft.setTextColor(LIGHTGREY);
   tft.drawString(ssid, 5, 120);
 }
 
@@ -94,6 +94,7 @@ void Renderer::alert(String message, uint32_t color) {
 
   tft.fillRect(0, 158, DISPLAY_WIDTH, 16, color);
   tft.loadFont(FONT_DEFAULT);
+  tft.setTextColor(WHITE);
   tft.drawString(message, 0, 96, 1);
   tft.unloadFont();
 }

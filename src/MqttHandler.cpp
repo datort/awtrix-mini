@@ -44,6 +44,12 @@ void MqttHandler::onMessage(String &task, String &payload) {
 
     if (task == "erase") {
         handleEraseConfig();
+    } else if (task == "setting") {
+        handleSettingUpdate(payload);
+    } else if (task == "reboot") {
+        renderer.alert("Rebooting device...", ORANGE);
+        delay(2500);
+        ESP.restart();
     } else {
         Serial.println("Unknown topic");
     }
@@ -58,4 +64,40 @@ void MqttHandler::handleEraseConfig() {
 
     delay(2500);
     ESP.restart();
+}
+
+void MqttHandler::handleSettingUpdate(String &payload) {
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, payload);
+    
+    if (error) {
+        Serial.print("deserializeJson() failed: ");
+        Serial.println(error.c_str());
+        renderer.alert("Invalid JSON via MQTT", RED);
+        delay(2000);
+        return;
+    }
+    
+    const char* keys[] = {
+        "hostname",
+        "awtrixHostname",
+        "mqttBroker",
+        "mqttPort",
+        "mqttUsername",
+        "mqttPassword",
+        "mqttTopic"
+    };
+
+    const size_t numKeys = sizeof(keys) / sizeof(keys[0]);
+
+    for (size_t i = 0; i < numKeys; i++) {
+        const char* key = keys[i];
+        if (doc.containsKey(key)) {
+            configManager.updateSetting(key, doc[key]);
+        }
+    }
+
+    renderer.alert("Setting saved.\nConsider rebooting.", GREEN);
+    delay(2500);
+    renderer.tft.fillScreen(BLACK);
 }

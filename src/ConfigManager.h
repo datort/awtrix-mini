@@ -20,6 +20,7 @@ public:
     const char* getMqttUsername();
     const char* getMqttPassword();
     const char* getMqttTopic();
+    void updateSetting(const char* key, const char* value);
     
 private:
     char hostname[50];

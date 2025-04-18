@@ -11,6 +11,8 @@ public:
     String getSSID();
     const WiFiManagerParameter& getCustomHostname() const;
     const WiFiManagerParameter& getAwtrixHostname() const;
+    const WiFiManagerParameter& getAwtrixAuthUser() const;
+    const WiFiManagerParameter& getAwtrixAuthPass() const;
     const WiFiManagerParameter& getMqttBroker() const;
     const WiFiManagerParameter& getMqttPort() const;
     const WiFiManagerParameter& getMqttUsername() const;
@@ -21,6 +23,8 @@ private:
     WiFiManager wm;
     WiFiManagerParameter customHostname;
     WiFiManagerParameter awtrixHostname;
+    WiFiManagerParameter awtrixAuthUser;
+    WiFiManagerParameter awtrixAuthPass;
     WiFiManagerParameter mqttBroker;
     WiFiManagerParameter mqttPort;
     WiFiManagerParameter mqttUsername;

@@ -83,6 +83,8 @@ void MqttHandler::handleSettingUpdate(JsonDocument &json) {
     const char* keys[] = {
         "hostname",
         "awtrixHostname",
+        "awtrixAuthUser",
+        "awtrixAuthPass",
         "mqttBroker",
         "mqttPort",
         "mqttUsername",
@@ -94,7 +96,7 @@ void MqttHandler::handleSettingUpdate(JsonDocument &json) {
 
     for (size_t i = 0; i < numKeys; i++) {
         const char* key = keys[i];
-        if (json.containsKey(key)) {
+        if (json[key].is<const char*>()) {
             configManager.updateSetting(key, json[key]);
         }
     }
@@ -105,7 +107,7 @@ void MqttHandler::handleSettingUpdate(JsonDocument &json) {
 }
 
 void MqttHandler::toggleDisplay(JsonDocument &json) {
-    if (json.containsKey("on")) {
+    if (json["on"].is<bool>()) {
         renderer.tft.writecommand(json["on"] == false ? 0x28 : 0x29);
         digitalWrite(D6, json["on"] == false ? LOW : HIGH);
     }

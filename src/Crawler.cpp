@@ -10,7 +10,7 @@ Crawler::~Crawler() {
     delete httpClient;
 }
 
-bool Crawler::ensureConnection(const String& apiUrl) {
+bool Crawler::ensureConnection(const String& apiUrl, const char* authUser, const char* authPass) {
     if (isConnected && currentUrl == apiUrl) {
         return true;
     }
@@ -18,6 +18,10 @@ bool Crawler::ensureConnection(const String& apiUrl) {
     if (isConnected) {
         httpClient->end();
         isConnected = false;
+    }
+
+    if (authUser && authPass && strlen(authUser) > 0 && strlen(authPass) > 0) {
+        httpClient->setAuthorization(authUser, authPass);
     }
     
     if (!httpClient->begin(wifiClient, apiUrl)) {
@@ -31,8 +35,8 @@ bool Crawler::ensureConnection(const String& apiUrl) {
     return true;
 }
 
-bool Crawler::crawl(const String& apiUrl, JsonDocument& response) {
-    if (!ensureConnection(apiUrl)) {
+bool Crawler::crawl(const String& apiUrl, JsonDocument& response, const char* authUser, const char* authPass) {
+    if (!ensureConnection(apiUrl, authUser, authPass)) {
         return false;
     }
 

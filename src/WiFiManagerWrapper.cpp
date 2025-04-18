@@ -2,14 +2,43 @@
 
 WiFiManagerWrapper::WiFiManagerWrapper() 
     : customHostname("hostname", "This device's hostname", "awtrixmini", 50),
-      awtrixHostname("awtrixHostname", "AWTRIX Hostname/IP", "192.168.178.123", 50),
-      mqttBroker("mqttBroker", "MQTT Broker", "", 50),
-      mqttPort("mqttPort", "MQTT Port", "1883", 5),
+      awtrixHostname("awtrixHostname", "Host AWTRIX hostname or IP", "192.168.178.123", 50),
+      awtrixAuthUser("awtrixAuthUser", "", "", 50, " placeholder=\"AWTRIX Auth User (optional)\""),
+      awtrixAuthPass("awtrixAuthPass", "", "", 50, " placeholder=\"AWTRIX Auth Password (optional)\""),
+      mqttBroker("mqttBroker", "MQTT Broker", "", 50, " placeholder=\"my.broker.local\""),
+      mqttPort("mqttPort", "MQTT Port", "1883", 5, " placeholder=\"1883\""),
       mqttUsername("mqttUsername", "MQTT Username", "", 50),
       mqttPassword("mqttPassword", "MQTT Password", "", 50),
       mqttTopic("mqttTopic", "MQTT Topic", "awtrixmini", 50) {
-    wm.addParameter(&customHostname);
+}
+
+void WiFiManagerWrapper::setupWiFi(const char* apName, const char* apPassword, std::function<void()> onSaveConfig) {
+
+    WiFiManagerParameter stepDivider("<hr />");
+    
+    WiFiManagerParameter headlineBasicSetup("<h2>Basic setup</h2>");
+    wm.addParameter(&headlineBasicSetup);
+
     wm.addParameter(&awtrixHostname);
+    wm.addParameter(&customHostname);
+
+    wm.addParameter(&stepDivider);
+
+    WiFiManagerParameter headlineAwtrixAuth("<h2>AWTRIX Authentication</h2>");
+    WiFiManagerParameter hintAwtrixAuth("<p><i>Only if you configured authentication on your Host AWTRIX</i></p>");
+    wm.addParameter(&headlineAwtrixAuth);
+    wm.addParameter(&hintAwtrixAuth);
+
+    wm.addParameter(&awtrixAuthUser);
+    wm.addParameter(&awtrixAuthPass);
+
+    wm.addParameter(&stepDivider);
+
+    WiFiManagerParameter headlineMqttSetup("<h2>MQTT configuration</h2>");
+    WiFiManagerParameter hintMqttSetup("<p><i>Optional: Leave as is if you don't want to use MQTT</i></p>");
+    wm.addParameter(&headlineMqttSetup);
+    wm.addParameter(&hintMqttSetup);
+
     wm.addParameter(&mqttBroker);
     wm.addParameter(&mqttPort);
     wm.addParameter(&mqttTopic);
@@ -18,9 +47,6 @@ WiFiManagerWrapper::WiFiManagerWrapper()
 
     wm.setClass("invert");
     wm.setScanDispPerc(true);
-}
-
-void WiFiManagerWrapper::setupWiFi(const char* apName, const char* apPassword, std::function<void()> onSaveConfig) {
     wm.setSaveConfigCallback(onSaveConfig);
 
     if (!wm.autoConnect(apName, apPassword)) {
@@ -43,6 +69,14 @@ const WiFiManagerParameter& WiFiManagerWrapper::getCustomHostname() const {
 
 const WiFiManagerParameter& WiFiManagerWrapper::getAwtrixHostname() const {
     return awtrixHostname;
+}
+
+const WiFiManagerParameter& WiFiManagerWrapper::getAwtrixAuthUser() const {
+    return awtrixAuthUser;
+}
+
+const WiFiManagerParameter& WiFiManagerWrapper::getAwtrixAuthPass() const {
+    return awtrixAuthPass;
 }
 
 const WiFiManagerParameter& WiFiManagerWrapper::getMqttBroker() const {

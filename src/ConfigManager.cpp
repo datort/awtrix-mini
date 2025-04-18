@@ -3,6 +3,8 @@
 ConfigManager::ConfigManager() {
   strcpy(hostname, "awtrixmini");
   strcpy(awtrixHostname, "192.168.178.123");
+  strcpy(awtrixAuthUser, "");
+  strcpy(awtrixAuthPass, "");
   strcpy(mqttBroker, "");
   strcpy(mqttPort, "1883");
   strcpy(mqttUsername, "");
@@ -29,6 +31,8 @@ bool ConfigManager::loadConfig() {
 
           strcpy(hostname, json["hostname"]);
           strcpy(awtrixHostname, json["awtrixHostname"]);
+          strcpy(awtrixAuthUser, json["awtrixAuthUser"]);
+          strcpy(awtrixAuthPass, json["awtrixAuthPass"]);
           
           if (json.containsKey("mqttBroker")) {
             strcpy(mqttBroker, json["mqttBroker"]);
@@ -60,12 +64,15 @@ bool ConfigManager::loadConfig() {
 }
 
 void ConfigManager::saveConfig(const char* updatedHostname, const char* updatedAwtrixHostname, 
+                             const char* updatedAwtrixAuthUser, const char* updatedAwtrixAuthPass,
                              const char* updatedMqttBroker, const char* updatedMqttPort,
                              const char* updatedMqttUsername, const char* updatedMqttPassword,
                              const char* updatedMqttTopic) {
   JsonDocument json;
   json["hostname"] = updatedHostname;
   json["awtrixHostname"] = updatedAwtrixHostname;
+  json["awtrixAuthUser"] = updatedAwtrixAuthUser;
+  json["awtrixAuthPass"] = updatedAwtrixAuthPass;
   json["mqttBroker"] = updatedMqttBroker;
   json["mqttPort"] = updatedMqttPort;
   json["mqttUsername"] = updatedMqttUsername;
@@ -78,6 +85,8 @@ void ConfigManager::saveConfig(const char* updatedHostname, const char* updatedA
 
   strcpy(hostname, updatedHostname);
   strcpy(awtrixHostname, updatedAwtrixHostname);
+  strcpy(awtrixAuthUser, updatedAwtrixAuthUser);
+  strcpy(awtrixAuthPass, updatedAwtrixAuthPass);
   strcpy(mqttBroker, updatedMqttBroker);
   strcpy(mqttPort, updatedMqttPort);
   strcpy(mqttUsername, updatedMqttUsername);
@@ -100,6 +109,14 @@ const char* ConfigManager::getHostname() {
 
 const char* ConfigManager::getAwtrixHostname() {
   return awtrixHostname;
+}
+
+const char* ConfigManager::getAwtrixAuthUser() {
+  return awtrixAuthUser;
+}
+
+const char* ConfigManager::getAwtrixAuthPass() {
+  return awtrixAuthPass;
 }
 
 const char* ConfigManager::getMqttBroker() {

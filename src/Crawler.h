@@ -10,7 +10,7 @@ public:
     Crawler();
     ~Crawler();
 
-    bool crawl(const String& apiUrl, JsonDocument& response);
+    bool crawl(const String& apiUrl, JsonDocument& response, const char* authUser, const char* authPass);
 
 private:
     HTTPClient* httpClient;
@@ -18,7 +18,7 @@ private:
     String currentUrl;
     bool isConnected;
     
-    bool ensureConnection(const String& apiUrl);
+    bool ensureConnection(const String& apiUrl, const char* authUser, const char* authPass);
 };
 
 #endif

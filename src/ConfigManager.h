@@ -9,12 +9,15 @@ public:
     ConfigManager();
     bool loadConfig();
     void saveConfig(const char* hostname, const char* awtrixHostname, 
+                   const char* awtrixAuthUser, const char* awtrixAuthPass, 
                    const char* mqttBroker, const char* mqttPort,
                    const char* mqttUsername, const char* mqttPassword,
                    const char* mqttTopic);
     void resetConfig();
     const char* getHostname();
     const char* getAwtrixHostname();
+    const char* getAwtrixAuthUser();
+    const char* getAwtrixAuthPass();
     const char* getMqttBroker();
     const char* getMqttPort();
     const char* getMqttUsername();
@@ -25,6 +28,8 @@ public:
 private:
     char hostname[50];
     char awtrixHostname[50];
+    char awtrixAuthUser[50];
+    char awtrixAuthPass[50];
     char mqttBroker[50];
     char mqttPort[10];
     char mqttUsername[50];

@@ -42,10 +42,23 @@ void MqttHandler::onMessage(String &task, String &payload) {
     Serial.print("Payload: ");
     Serial.println(payload);
 
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, payload);
+    
+    if (error) {
+        Serial.print("deserializeJson() failed: ");
+        Serial.println(error.c_str());
+        renderer.alert("Invalid JSON via MQTT", RED);
+        delay(2000);
+        return;
+    }
+
     if (task == "erase") {
         handleEraseConfig();
     } else if (task == "setting") {
-        handleSettingUpdate(payload);
+        handleSettingUpdate(doc);
+    } else if (task == "display") {
+        toggleDisplay(doc);
     } else if (task == "reboot") {
         renderer.alert("Rebooting device...", ORANGE);
         delay(2500);
@@ -66,18 +79,7 @@ void MqttHandler::handleEraseConfig() {
     ESP.restart();
 }
 
-void MqttHandler::handleSettingUpdate(String &payload) {
-    JsonDocument doc;
-    DeserializationError error = deserializeJson(doc, payload);
-    
-    if (error) {
-        Serial.print("deserializeJson() failed: ");
-        Serial.println(error.c_str());
-        renderer.alert("Invalid JSON via MQTT", RED);
-        delay(2000);
-        return;
-    }
-    
+void MqttHandler::handleSettingUpdate(JsonDocument &json) {
     const char* keys[] = {
         "hostname",
         "awtrixHostname",
@@ -92,12 +94,19 @@ void MqttHandler::handleSettingUpdate(String &payload) {
 
     for (size_t i = 0; i < numKeys; i++) {
         const char* key = keys[i];
-        if (doc.containsKey(key)) {
-            configManager.updateSetting(key, doc[key]);
+        if (json.containsKey(key)) {
+            configManager.updateSetting(key, json[key]);
         }
     }
 
     renderer.alert("Setting saved.\nConsider rebooting.", GREEN);
     delay(2500);
     renderer.tft.fillScreen(BLACK);
+}
+
+void MqttHandler::toggleDisplay(JsonDocument &json) {
+    if (json.containsKey("on")) {
+        renderer.tft.writecommand(json["on"] == false ? 0x28 : 0x29);
+        digitalWrite(D6, json["on"] == false ? LOW : HIGH);
+    }
 }

@@ -27,7 +27,8 @@ private:
     
     void onMessage(String &topic, String &payload);
     void handleEraseConfig();
-    void handleSettingUpdate(String &payload);
+    void handleSettingUpdate(JsonDocument &json);
+    void toggleDisplay(JsonDocument &json);
 };
 
 #endif 

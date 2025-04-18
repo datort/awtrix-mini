@@ -38,6 +38,7 @@ You can configure the topic AWTRIX STREAM listens on during your initial configu
   - Payload: none
 
 - `awtrixstream/setting` - Modify device settings
+  - Possible keys: hostname, awtrixHostname, awtrixAuthUser, awtrixAuthPass, mqttBroker, mqttPort, mqttUsername, mqttPassword, mqttTopic
   - Payload examples:
     ```json
     {"awtrixHostname": "192.168.2.3"}  // Changes the ip/host of the host AWTRIX to grab data from
